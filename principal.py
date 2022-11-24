@@ -140,4 +140,56 @@ if archivo_registros_presencia is not None:
                     names=asp_registros_grafico.index,
                     values='cantidad_registros_presencia')
         fig.update_traces(textposition='inside', textinfo='percent+label')
-        st.plotly_chart(fig)                  
+        st.plotly_chart(fig)  
+
+
+    with col1:
+        # Mapa de calor y de registros agrupados
+        st.header('Mapa de calor y de registros agrupados')
+
+        # Capa base
+        m = folium.Map(location=[9.6, -84.2], tiles='CartoDB dark_matter', zoom_start=8)
+        # Capa de calor
+        HeatMap(data=registros_presencia[['decimalLatitude', 'decimalLongitude']],
+                name='Mapa de calor').add_to(m)
+        # Capa de ASP
+        folium.GeoJson(data=asp, name='ASP').add_to(m)
+        # Capa de registros de presencia agrupados
+        mc = MarkerCluster(name='Registros agrupados')
+        for idx, row in registros_presencia.iterrows():
+            if not math.isnan(row['decimalLongitude']) and not math.isnan(row['decimalLatitude']):
+                mc.add_child(Marker([row['decimalLatitude'], row['decimalLongitude']], 
+                                    popup=row['species']))
+        m.add_child(mc)
+        # Control de capas
+        folium.LayerControl().add_to(m)    
+        # Despliegue del mapa
+        folium_static(m)   
+
+    with col2:
+        # Mapa de coropletas de registros de presencia en ASP
+        st.header('Mapa de cantidad de registros en ASP')
+
+        # Capa base
+        m = folium.Map(location=[9.6, -84.2], tiles='CartoDB positron', zoom_start=8)
+        # Capa de coropletas
+        folium.Choropleth(
+            name="Cantidad de registros en ASP",
+            geo_data=asp,
+            data=asp_registros,
+            columns=['codigo', 'cantidad_registros_presencia'],
+            bins=8,
+            key_on='feature.properties.codigo',
+            fill_color='Reds', 
+            fill_opacity=0.5, 
+            line_opacity=1,
+            legend_name='Cantidad de registros de presencia',
+            smooth_factor=0).add_to(m)
+        # Control de capas
+        folium.LayerControl().add_to(m)        
+        # Despliegue del mapa
+        folium_static(m)             
+
+    # Mapa de registros de presencia
+        st.header('Mapa de registros de presencia')
+        st.map(registros_presencia.rename(columns = {'decimalLongitude':'longitude', 'decimalLatitude':'latitude'}))
