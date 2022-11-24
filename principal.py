@@ -21,7 +21,7 @@ import folium
 from folium import Marker
 from folium.plugins import MarkerCluster
 from folium.plugins import HeatMap
-from streamlit_folium import folium_static
+from streamlit_folium import folium_static 
 
 import math
 
