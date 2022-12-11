@@ -89,7 +89,7 @@ if archivo_registros_presencia is not None:
 
 # Mapas
 
-    with col2:
+    with col1:
         # Mapa de coropletas de registros de presencia por provincia
         st.header('Mapa de cantidad de registros por Provincia')
 
@@ -97,10 +97,10 @@ if archivo_registros_presencia is not None:
         m = folium.Map(location=[9.6, -84.2], tiles='CartoDB positron', zoom_start=8)
         # Capa de coropletas
         folium.Choropleth(
-            name="Cantidad de registros en ASP",
-            geo_data=asp,
-            data=asp_registros,
-            columns=['codigo', 'cantidad_registros_presencia'],
+            name="Cantidad de registros por Provincias",
+            geo_data=provincias,
+            data=provincias_registros,
+            columns=['cod_provin', 'cantidad_registros_presencia'],
             bins=8,
             key_on='feature.properties.codigo',
             fill_color='Reds', 
@@ -121,10 +121,10 @@ if archivo_registros_presencia is not None:
         m = folium.Map(location=[9.6, -84.2], tiles='CartoDB positron', zoom_start=8)
         # Capa de coropletas
         folium.Choropleth(
-            name="Cantidad de registros en ASP",
-            geo_data=asp,
-            data=asp_registros,
-            columns=['codigo', 'cantidad_registros_presencia'],
+            name="Cantidad de registros por Cantón",
+            geo_data=cantones,
+            data=cantones_registros,
+            columns=['cod_canton', 'cantidad_registros_presencia'],
             bins=8,
             key_on='feature.properties.codigo',
             fill_color='Reds', 
