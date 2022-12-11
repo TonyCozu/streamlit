@@ -74,7 +74,7 @@ if archivo_registros_presencia is not None:
     # "Join" espacial de las capas de ASP y registros de presencia
     cantones_contienen_registros = cantones.sjoin(registros_presencia, how="left", predicate="contains")
     # Conteo de registros de presencia en cada ASP
-    cantones_registros = cantones_contienen_registros.groupby("codigo").agg(cantidad_registros_presencia = ("gbifID","count"))
+    cantones_registros = cantones_contienen_registros.groupby("cod_canton").agg(cantidad_registros_presencia = ("gbifID","count"))
     cantones_registros = cantones_registros.reset_index() # para convertir la serie a dataframe
 
     # Filtrado
@@ -84,7 +84,7 @@ if archivo_registros_presencia is not None:
     # "Join" espacial de las capas de ASP y registros de presencia
     provincias_contienen_registros = provincias.sjoin(registros_presencia, how="left", predicate="contains")
     # Conteo de registros de presencia en cada ASP
-    provincias_registros = provincias_contienen_registros.groupby("codigo").agg(cantidad_registros_presencia = ("gbifID","count"))
+    provincias_registros = provincias_contienen_registros.groupby("cod_provin").agg(cantidad_registros_presencia = ("gbifID","count"))
     provincias_registros = provincias_registros.reset_index() # para convertir la serie a dataframe
 
 # Mapas
