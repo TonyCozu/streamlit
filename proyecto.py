@@ -89,6 +89,9 @@ if archivo_registros_presencia is not None:
 
 # Mapas
 
+    # Definición de columnas
+    col1, col2 = st.columns(2)
+
     with col1:
         # Mapa de coropletas de registros de presencia por provincia
         st.header('Mapa de cantidad de registros por Provincia')
