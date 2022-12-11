@@ -24,7 +24,7 @@ st.set_page_config(layout='wide')
 # TÍTULO Y DESCRIPCIÓN DE LA APLICACIÓN
 #
 
-st.title('Progrmación en SIG. Proyecto: Visualización de datos de Especies')
+st.title('Programación en SIG. Proyecto: Visualización de datos de Especies')
 st.markdown('Esta aplicación presenta visualizaciones tabulares, gráficas y geoespaciales de datos de biodiversidad que siguen el estándar [Darwin Core (DwC)](https://dwc.tdwg.org/terms/).')
 st.markdown('El usuario debe seleccionar un archivo CSV basado en el DwC y posteriormente elegir una de las especies con datos contenidos en el archivo. **El archivo debe estar separado por tabuladores**. Este tipo de archivos puede obtenerse, entre otras formas, en el portal de la [Infraestructura Mundial de Información en Biodiversidad (GBIF)](https://www.gbif.org/).')
 st.markdown('La aplicación muestra un conjunto de tablas, gráficos y mapas correspondientes a la distribución de la especie en el tiempo y en el espacio.')
@@ -63,7 +63,29 @@ if archivo_registros_presencia is not None:
     lista_especies.sort()
     filtro_especie = st.sidebar.selectbox('Seleccione la especie', lista_especies)
 
+#
+# PROCESAMIENTO
+#
 
+    # Filtrado
+    registros_presencia = registros_presencia[registros_presencia['species'] == filtro_especie]
+
+    # Cálculo de la cantidad de registros en Cantones
+    # "Join" espacial de las capas de ASP y registros de presencia
+    cantones_contienen_registros = cantones.sjoin(registros_presencia, how="left", predicate="contains")
+    # Conteo de registros de presencia en cada ASP
+    cantones_registros = cantones_contienen_registros.groupby("codigo").agg(cantidad_registros_presencia = ("gbifID","count"))
+    cantones_registros = cantones_registros.reset_index() # para convertir la serie a dataframe
+
+    # Filtrado
+    registros_presencia = registros_presencia[registros_presencia['species'] == filtro_especie]
+
+    # Cálculo de la cantidad de registros en Provincias
+    # "Join" espacial de las capas de ASP y registros de presencia
+    provincias_contienen_registros = provincias.sjoin(registros_presencia, how="left", predicate="contains")
+    # Conteo de registros de presencia en cada ASP
+    provincias_registros = provincias_contienen_registros.groupby("codigo").agg(cantidad_registros_presencia = ("gbifID","count"))
+    provincias_registros = provincias_registros.reset_index() # para convertir la serie a dataframe
 
 # Mapas
 
