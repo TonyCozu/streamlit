@@ -48,7 +48,7 @@ if archivo_registros_presencia is not None:
                                            crs='EPSG:4326')
 
     # Carga de polígonos de Cantones y Provincia
-    cantones = gpd.read_file("cantones.geojson")
+    cantones = gpd.read_file("cantones-crtm05.geojson")
     provincias = gpd.read_file("provincias.geojson")
 
     # Limpieza de datos
